@@ -8,8 +8,5 @@ __pycache__/
 # Arquivos temporários
 *.log
 
-# Pasta de outputs (se quiser não subir gráficos)
-outputs/
-
 # Configuração do VSCode (opcional)
 .vscode/
