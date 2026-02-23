@@ -130,6 +130,7 @@ def grafico_dados_faltantes(df):
 
 #Gráfico de distribuição de Embarked
 def grafico_dados_embarked(df):
+    os.makedirs("outputs", exist_ok=True)
     plt.figure(figsize=(8,5))
     sns.countplot(x="Embarked", data=df)
     plt.title("Distribuição de Porto de Embarque")
@@ -149,6 +150,7 @@ def grafico_outliers_idade(df):
 
 #Gráfico de distribuição de idade
 def grafico_idade(df):
+    os.makedirs("outputs", exist_ok=True)
     plt.figure(figsize=(8,5))
     sns.histplot(df["Age"], bins=30, kde=True)
     plt.title("Distribuição de idade")
@@ -243,7 +245,8 @@ def sobreviventes_fare(df):
     df["Fare_Quartil"] = pd.qcut(
         df["Fare"],
         4,
-        labels=["Q1 - Mais Barato", "Q2", "Q3", "Q4 - Mais Caro"]
+        labels=["Q1 - Mais Barato", "Q2", "Q3", "Q4 - Mais Caro"],
+        duplicates="drop"
     )
 
     resultado_fare = df.groupby("Fare_Quartil")["Survived"].mean()*100
@@ -445,6 +448,11 @@ def main():
     # Ajustando tipagem dos dados
     # =========================
     df = ajustar_tipos(df)
+
+    # =========================
+    # Garantindo a criação da pasta, caso necessário
+    # =========================
+    os.makedirs("outputs", exist_ok=True)
 
     # =========================
     # EDA Inicial
