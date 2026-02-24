@@ -329,6 +329,39 @@ def grafico_sobreviventes_embarked(resultado):
     plt.savefig("outputs/sobrevivencia_por_embarked.png")
     plt.close()
 
+#Sobreviventes por Classe e Embarked
+def distribuicao_embarked_classe(df):
+    tabela = (
+        df.groupby(["Embarked", "Pclass"])
+          .size()
+          .unstack()
+    )
+
+    tabela_percentual = tabela.div(tabela.sum(axis=1), axis=0) * 100
+
+    print("\nDistribuição Percentual de Classe por Porto de Embarque:")
+    print(tabela_percentual.round(2))
+
+    return tabela_percentual
+
+#Gráfico de Classe e Embarked
+def grafico_embarked_classe_heatmap(tabela_percentual):
+    os.makedirs("outputs", exist_ok=True)
+
+    plt.figure(figsize=(8,5))
+    sns.heatmap(
+        tabela_percentual,
+        annot=True,
+        fmt=".1f",
+        cmap="YlGnBu"
+    )
+
+    plt.title("Distribuição Percentual de Classe\npor Porto de Embarque")
+    plt.ylabel("Porto de Embarque")
+    plt.xlabel("Classe")
+    plt.savefig("outputs/heatmap_embarked_classe.png")
+    plt.close()
+
 #Sobreviventes por classe e sexo
 def sobreviventes_sexo_classe(df):
     resultado_sexo_classe = df.groupby(["Pclass", "Sex"])["Survived"].mean()*100
@@ -489,6 +522,10 @@ def main():
     # Fare
     resultado_fare = sobreviventes_fare(df)
     grafico_sobreviventes_fare(resultado_fare)
+
+    # Embarked + Classe
+    tabela_embarked_classe = distribuicao_embarked_classe(df)
+    grafico_embarked_classe_heatmap(tabela_embarked_classe)
 
     # Classe + Sexo
     sobreviventes_sexo_classe(df)
